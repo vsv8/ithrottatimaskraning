@@ -43,7 +43,7 @@ const validationMiddleware = [
     .isLength({ min: 1 })
     .withMessage('Símanúmer má ekki vera tómt'),
   body('phone')
-    .matches(new RegExp(nationalIdPattern))
+    .matches(new RegExp(phonePattern))
     .withMessage('Símanúmer verður að vera á formi 000-0000 eða 0000000'),
 ];
 
