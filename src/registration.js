@@ -20,9 +20,7 @@ async function index(req, res) {
   const errors = [];
   const formData = {
     name: '',
-    nationalId: '',
-    anonymous: false,
-    comment: '',
+    phone: '',
   };
 
   const registrations = await list();
@@ -32,7 +30,7 @@ async function index(req, res) {
   });
 }
 
-const nationalIdPattern = '^[0-9]{6}-?[0-9]{4}$';
+const phonePattern = '^[0-9]{3}-?[0-9]{4}$';
 
 const validationMiddleware = [
   body('name')
@@ -41,37 +39,32 @@ const validationMiddleware = [
   body('name')
     .isLength({ max: 128 })
     .withMessage('Nafn má að hámarki vera 128 stafir'),
-  body('nationalId')
+  body('phone')
     .isLength({ min: 1 })
-    .withMessage('Kennitala má ekki vera tóm'),
-  body('nationalId')
+    .withMessage('Símanúmer má ekki vera tómt'),
+  body('phone')
     .matches(new RegExp(nationalIdPattern))
-    .withMessage('Kennitala verður að vera á formi 000000-0000 eða 0000000000'),
-  body('comment')
-    .isLength({ max: 400 })
-    .withMessage('Athugasemd má að hámarki vera 400 stafir'),
+    .withMessage('Símanúmer verður að vera á formi 000-0000 eða 0000000'),
 ];
 
 // Viljum keyra sér og með validation, ver gegn „self XSS“
 const xssSanitizationMiddleware = [
   body('name').customSanitizer((v) => xss(v)),
-  body('nationalId').customSanitizer((v) => xss(v)),
-  body('comment').customSanitizer((v) => xss(v)),
-  body('anonymous').customSanitizer((v) => xss(v)),
+  body('phone').customSanitizer((v) => xss(v)),
 ];
 
 const sanitizationMiddleware = [
   body('name').trim().escape(),
-  body('nationalId').blacklist('-'),
+  body('phone').blacklist('-'),
 ];
 
 async function validationCheck(req, res, next) {
   const {
-    name, nationalId, comment, anonymous,
+    name, phone,
   } = req.body;
 
   const formData = {
-    name, nationalId, comment, anonymous,
+    name, phone,
   };
   const registrations = await list();
 
@@ -86,14 +79,14 @@ async function validationCheck(req, res, next) {
 
 async function register(req, res) {
   const {
-    name, nationalId, comment, anonymous,
+    name, phone,
   } = req.body;
 
   let success = true;
 
   try {
     success = await insert({
-      name, nationalId, comment, anonymous,
+      name, phone,
     });
   } catch (e) {
     console.error(e);
