@@ -21,6 +21,7 @@ async function index(req, res) {
   const formData = {
     name: '',
     phone: '',
+    comment: ''
   };
 
   const registrations = await list();
@@ -45,12 +46,16 @@ const validationMiddleware = [
   body('phone')
     .matches(new RegExp(phonePattern))
     .withMessage('Símanúmer verður að vera á formi 000-0000 eða 0000000'),
+    body('comment')
+    .isLength({ max: 400 })
+    .withMessage('Athugasemd má að hámarki vera 400 stafir'),
 ];
 
 // Viljum keyra sér og með validation, ver gegn „self XSS“
 const xssSanitizationMiddleware = [
   body('name').customSanitizer((v) => xss(v)),
   body('phone').customSanitizer((v) => xss(v)),
+  body('comment').customSanitizer((v) => xss(v)),
 ];
 
 const sanitizationMiddleware = [
@@ -60,11 +65,11 @@ const sanitizationMiddleware = [
 
 async function validationCheck(req, res, next) {
   const {
-    name, phone,
+    name, phone, comment,
   } = req.body;
 
   const formData = {
-    name, phone,
+    name, phone, comment,
   };
   const registrations = await list();
 
@@ -79,14 +84,14 @@ async function validationCheck(req, res, next) {
 
 async function register(req, res) {
   const {
-    name, phone,
+    name, phone, comment,
   } = req.body;
 
   let success = true;
 
   try {
     success = await insert({
-      name, phone,
+      name, phone, comment,
     });
   } catch (e) {
     console.error(e);

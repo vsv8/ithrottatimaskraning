@@ -10,6 +10,11 @@
     <input type="text" name="phone" id="phone" value="<%= formData.phone %>" class="">
   </div>
 
+  <div class="field<%= locals.isInvalid('comment', errors) ?  ' field--invalid' : '' %>">
+    <label for="comment">Athugasemd</label>
+    <input type="text" name="comment" id="comment" value="<%= formData.comment %>" class="">
+  </div>
+
   <% if (errors.length > 0) { %>
     <h2 class="errors__title">Villur við skráningu:</h2>
     <ul class="errors">

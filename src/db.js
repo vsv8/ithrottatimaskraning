@@ -44,17 +44,17 @@ export async function query(_query, values = []) {
  * @returns {Promise<boolean>} Promise, resolved as true if inserted, otherwise false
  */
 export async function insert({
-  name, phone,
+  name, phone, comment,
 } = {}) {
   let success = true;
 
   const q = `
     INSERT INTO signatures
-      (name, phone)
+      (name, phone, comment)
     VALUES
-      ($1, $2);
+      ($1, $2, $3);
   `;
-  const values = [name, phone];
+  const values = [name, phone, comment];
 
   try {
     await query(q, values);
@@ -75,7 +75,7 @@ export async function list() {
   let result = [];
   try {
     const queryResult = await query(
-      'SELECT name, phone, signed FROM signatures ORDER BY signed DESC',
+      'SELECT name, phone, comment, signed FROM signatures ORDER BY signed DESC',
     );
 
     if (queryResult && queryResult.rows) {

@@ -10,12 +10,14 @@
         <th>Dags</th>
         <th>Nafn</th>
         <th>Sími</th>
+        <th>Athugasemd</th>
       </tr>
       <% registrations.forEach((row) => { %>
         <tr>
           <td class="date"><%= formatDate(row.signed) %></td>
           <td class="name"><%= row.name %></td>
-          <td class="comment"><%= row.phone %></td>
+          <td class="phone"><%= row.phone %></td>
+          <td class="comment"><%= row.comment %></td>
         </tr>
       <% }) %>
       </tr>
