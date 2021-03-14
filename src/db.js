@@ -75,7 +75,7 @@ export async function list() {
   let result = [];
   try {
     const queryResult = await query(
-      'SELECT name, phone, comment, signed FROM signatures ORDER BY signed DESC',
+      'SELECT name, phone, comment, signed FROM signatures ORDER BY signed ASC',
     );
 
     if (queryResult && queryResult.rows) {
